@@ -33,9 +33,23 @@ def drop_db():  # Удаляет базу данных
     try:
         cur.execute("DROP TABLE IF EXISTS contacts")
 
+        con.commit()
+
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
         con.rollback()
 
     finally:
-        print('База данных успено удалена!')
+        print('База данных успешно удалена!')
+
+
+def close_connection():  # Закрывает соединение с базой данных
+    try:
+        cur.close()
+        con.close()
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+
+    finally:
+        print('Соединение успешно закрыто!')
