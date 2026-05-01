@@ -20,13 +20,11 @@ def create_db():  # Создаёт базу данных
         """)
 
         con.commit()
+        print('База данных успешно создана!')
 
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
         con.rollback()
-
-    finally:
-        print('База данных успешно создана!')
 
 
 def drop_db():  # Удаляет базу данных
