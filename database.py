@@ -40,9 +40,9 @@ def check_table():  # Проверяет существование таблиц
         if result[0][0] != 'contacts':
             create_db()
 
-    # Не знаю что вывести в роли ошибки!
-    except ValueError():
-        pass
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        con.rollback()
 
 
 def drop_table_db():  # Удаляет базу данных
@@ -67,3 +67,40 @@ def close_connection():  # Закрывает соединение с базой
 
     finally:
         print('Соединение успешно закрыто!')
+
+
+# Добавляет контакт с важной информацией
+def add_contact_important(first_name, last_name, phone):
+    try:
+        cur.execute("""
+            INSERT INTO contacts (first_name, last_name, phone)
+            VALUES (?, ?, ?)
+        """, (first_name, last_name, phone))
+
+        con.commit()
+        return True
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        con.rollback()
+        return False
+
+
+# Добавляет дополнительную информацию к созданному контакту
+def add_contact_different(first_name, middle_name, last_name, email, birth_date):
+    try:
+        cur.execute("""
+            UPDATE contacts
+            SET middle_name = ?,
+            SET email = ?,
+            SET birth_date = ?
+            WHERE first_name = ? AND last_name = ?
+        """, (middle_name, email, birth_date, first_name, last_name))
+
+        con.commit()
+        print(f"Информация по контакту {last_name, first_name} обновлена!")
+        return True
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        return False
