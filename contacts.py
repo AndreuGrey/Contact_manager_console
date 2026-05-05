@@ -19,18 +19,32 @@ def add_contact_different(first_name, middle_name, last_name, email, birth_date)
     return result
 
 
-def display_a_list_of_contacts():  # Выводит список 10 контактов
-    try:
-        db.cur.execute("""
-            SELECT *
-            FROM contacts
-            LIMIT 10
-        """)
+# Выводит список 10 первых контактов
+def output_first_contacts():
+    result = db.output_first_contacts()
+    return result
 
-        display_result = db.cur.fetchall()
-        for i in display_result:
-            print(i)
 
-    except db.Error as e:
-        print(f"Ошибка базы данных: {e}")
-        return False
+# Нужно ещё сделать ввод доп.информации через проверку на созданность
+def output_additionally(first_name, last_name, phone):
+    result = db.check_create_contact(first_name, last_name, phone)
+    if result:
+        print("Такой контакт есть")
+
+
+# Выводит 10 следующих контактов
+
+
+# Удаление контакта с базы данных
+def delete_contact(first_name, last_name, phone):
+    result = db.delete_contact(first_name, last_name, phone)
+    if result:
+        print(f"Контакт {last_name} {first_name} удалён!")
+        return result
+
+
+# Закрывает соединение с базой данных
+def close_connection():
+    result = db.close_connection()
+    if result:
+        print("Соединение с БД закрыто!")

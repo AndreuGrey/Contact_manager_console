@@ -28,7 +28,8 @@ def create_db():  # Создаёт базу данных
         con.rollback()
 
 
-def check_table():  # Проверяет существование таблицы
+# Проверяет существование таблицы
+def check_table():
     try:
         cur.execute("""
             SELECT name
@@ -36,7 +37,7 @@ def check_table():  # Проверяет существование таблиц
             WHERE type='table' AND name='contacts'
         """)
 
-        result = cur.fetchall()
+        result = cur.fetchall()  # Нужно проверить есть ли строки вообще
         if result[0][0] != 'contacts':
             create_db()
 
@@ -61,12 +62,55 @@ def close_connection():  # Закрывает соединение с базой
     try:
         cur.close()
         con.close()
+        return True
 
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
+        return False
 
-    finally:
-        print('Соединение успешно закрыто!')
+
+# Выводит список 10 первых контактов
+def output_first_contacts():
+    try:
+        # Вывести те строки, значения которых не равно NULL
+        cur.execute("""
+            SELECT last_name, first_name, phone
+            FROM contacts
+            LIMIT 10
+        """)
+
+        display_result = cur.fetchall()
+        # Нужно вывести красиво, не через массив
+        for i in display_result:
+            print(i)
+        return True
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        return False
+
+
+# Проверка на созданность
+def check_create_contact(first_name, last_name, phone):
+    try:
+        cur.execute("""
+            SELECT True
+            FROM contacts
+            WHERE first_name = ? AND last_name = ? AND phone = ?
+        """, (first_name, last_name, phone))
+
+        check_result = cur.fetchall()
+        return check_result
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        return False
+
+
+# Выводит следующие 10 контактов
+def output_next_contacts():
+    pass
+    # Нужна проверка на rowid, чтобы вывести именно следующие
 
 
 # Добавляет контакт с важной информацией
@@ -92,13 +136,33 @@ def add_contact_different(first_name, middle_name, last_name, email, birth_date)
         cur.execute("""
             UPDATE contacts
             SET middle_name = ?,
-            SET email = ?,
-            SET birth_date = ?
+                email = ?,
+                birth_date = ?
             WHERE first_name = ? AND last_name = ?
         """, (middle_name, email, birth_date, first_name, last_name))
 
         con.commit()
-        print(f"Информация по контакту {last_name, first_name} обновлена!")
+        return True
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        return False
+
+
+# Изменение контакта ----
+def change_of_contacts():
+    pass
+
+
+# Удаление контакта с базы данных
+def delete_contact(first_name, last_name, phone):
+    try:
+        cur.execute("""
+            DELETE FROM contacts
+            WHERE first_name = ? AND last_name = ? AND phone = ?
+        """, (first_name, last_name, phone))
+
+        con.commit()
         return True
 
     except sql.Error as e:
