@@ -2,6 +2,13 @@
 import database as db
 
 
+# Удаление таблицы (Администрация)
+def drop_table_db():
+    result = db.drop_table_db()
+    if result:
+        print("База данных успешно удалена!")
+
+
 # Добавляет контакт с важной информацией
 def add_contact_important(first_name, last_name, phone):
     result = db.add_contact_important(first_name, last_name, phone)
@@ -21,14 +28,14 @@ def add_contact_different(first_name, middle_name, last_name, email, birth_date)
 
 # Выводит список 10 первых контактов
 def output_first_contacts():
-    result = db.output_first_contacts()
-    return result
+    result, check_list = db.output_first_contacts()
+    return result, check_list
 
 
 # Нужно ещё сделать ввод доп.информации через проверку на созданность
-def output_additionally(first_name, last_name, phone):
-    result = db.check_create_contact(first_name, last_name, phone)
-    if result:
+def output_additionally(check_list):
+    result_check = db.check_create_contact(check_list)
+    if result_check:
         print("Такой контакт есть")
 
 

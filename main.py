@@ -24,13 +24,13 @@ def programm_operation():  # Основная логика программы!
     command = int(input(f"\nВведите команду: "))
     if command == 1:  # Список контактов
         clear_terminal()
-        result = con.output_first_contacts()
+        result, check_list = con.output_first_contacts()
         if result:
             command_display = input(
                 f"\nВывести дополнительную информацию? (Да/Нет): ")
             if command_display == 'Да':
                 # Ошибка выборки данных (NameError)
-                con.output_additionally(first_name, last_name, phone)
+                con.output_additionally(check_list)
             elif command_display == 'Нет':
                 clear_terminal()
                 pass
@@ -59,10 +59,12 @@ def programm_operation():  # Основная логика программы!
                 birth_date = input("Дата рождения: ")
                 con.add_contact_different(
                     first_name, middle_name, last_name, email, birth_date)
+                clear_terminal()
             elif command_different == 'Нет':
                 pass
     elif command == 3:  # Изменить контакт
         clear_terminal()
+        # Изменение существующего контакта
         # Ввод дополнительной информации при существующем контакте
         pass
     elif command == 4:  # Удалить контакт
@@ -73,8 +75,19 @@ def programm_operation():  # Основная логика программы!
         phone = input("Телефон: ")
         result = con.delete_contact(first_name, last_name, phone)
         if result:
-            # Удалить ли ещё контакт?
-            pass
+            while True:
+                command_delete = input("Удалить ещё контакт? (Да/Нет): ")
+                if command_delete == 'Да':
+                    clear_terminal()
+                    print("Какой контакт удалить?")
+                    first_name = input("Имя: ")
+                    last_name = input("Фамилия: ")
+                    phone = input("Телефон: ")
+                    con.delete_contact(first_name, last_name, phone)
+                    return True
+                elif command_delete == 'Нет':
+                    clear_terminal()
+                    return False
     elif command == 5:  # Закрыть программу
         clear_terminal()
         con.close_connection()

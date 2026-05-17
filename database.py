@@ -6,7 +6,8 @@ con = sql.connect("Contacts_database.db")
 cur = con.cursor()
 
 
-def create_db():  # Создаёт базу данных
+# Создаёт базу данных
+def create_db():
     try:
         cur.execute("""
             CREATE TABLE IF NOT EXISTS contacts (
@@ -46,19 +47,22 @@ def check_table():
         con.rollback()
 
 
-def drop_table_db():  # Удаляет базу данных
+# Удаляет базу данных (Администрация)
+def drop_table_db():
     try:
         cur.execute("DROP TABLE IF EXISTS contacts")
 
         con.commit()
-        print('База данных успешно удалена!')
+        return True
 
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
         con.rollback()
+        return False
 
 
-def close_connection():  # Закрывает соединение с базой данных
+# Закрывает соединение с базой данных
+def close_connection():
     try:
         cur.close()
         con.close()
@@ -83,7 +87,7 @@ def output_first_contacts():
         # Нужно вывести красиво, не через массив
         for i in display_result:
             print(i)
-        return True
+        return True, display_result  # Выводит массив для сравнения
 
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
@@ -91,13 +95,12 @@ def output_first_contacts():
 
 
 # Проверка на созданность
-def check_create_contact(first_name, last_name, phone):
+def check_create_contact(check_list):
     try:
+        # Нужно написать запрос сравнения ----
         cur.execute("""
-            SELECT True
-            FROM contacts
-            WHERE first_name = ? AND last_name = ? AND phone = ?
-        """, (first_name, last_name, phone))
+            ...
+        """)
 
         check_result = cur.fetchall()
         return check_result
@@ -117,8 +120,8 @@ def output_next_contacts():
 def add_contact_important(first_name, last_name, phone):
     try:
         cur.execute("""
-            INSERT INTO contacts (first_name, last_name, phone)
-            VALUES (?, ?, ?)
+            INSERT INTO contacts (id, first_name, last_name, phone)
+            VALUES (MAX(id) + 1, ?, ?, ?)
         """, (first_name, last_name, phone))
 
         con.commit()
@@ -157,10 +160,38 @@ def change_of_contacts():
 # Удаление контакта с базы данных
 def delete_contact(first_name, last_name, phone):
     try:
+        # Удаление строки из таблицы
         cur.execute("""
             DELETE FROM contacts
             WHERE first_name = ? AND last_name = ? AND phone = ?
         """, (first_name, last_name, phone))
+
+        # Дальше пересоздаём таблицу для выравнивания rowid
+
+        # Создаём копирующую таблицу
+        cur.execute("""
+            CREATE TABLE copy_contacts AS
+                    SELECT * FROM contacts
+        """)
+
+        # Очищаем исходную таблицу
+        cur.execute("DELETE FROM contacts")
+
+        # Сбрасываем автоинкремент
+        cur.execute("""
+            UPDATE sqlite_sequence 
+            SET seq = 0
+            WHERE name = contacts 
+        """)
+
+        # Вставляет данные обратно из copy_contacts
+        cur.execute("""
+            INSERT INTO contacts
+            SELECT * FROM copy_contacts
+        """)
+
+        # Удаляем copy_contacts
+        cur.execute("DROP TABLE IF EXISTS copy_contacts")
 
         con.commit()
         return True
