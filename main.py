@@ -6,7 +6,7 @@ def clear_terminal():  # Очищает терминал в VS Code
     print("\033[H\033[J", end="")
 
 
-def menu_output():  # Выводит список доступных команд
+def menu_admin():  # Выводит список доступных команд
     menu_admin = [
         '1. Список контактов',
         '2. Добавить контакт',
@@ -15,33 +15,17 @@ def menu_output():  # Выводит список доступных коман�
         '5. Закрыть программу'
     ]
 
+    print()
     for i in menu_admin:
         print(i)
 
 
 def programm_operation():  # Основная логика программы!
-    menu_output()
+    menu_admin()
     command = int(input(f"\nВведите команду: "))
     if command == 1:  # Список контактов
         clear_terminal()
-        result, check_list = con.output_first_contacts()
-        if result:
-            command_display = input(
-                f"\nВывести дополнительную информацию? (Да/Нет): ")
-            if command_display == 'Да':
-                # Ошибка выборки данных (NameError)
-                con.output_additionally(check_list)
-            elif command_display == 'Нет':
-                clear_terminal()
-                pass
-            command_display = input(f"\nВывести ещё 10 контактов (Да/Нет): ")
-            if command_display == 'Да':
-                clear_terminal()
-                pass
-            elif command_display == 'Нет':
-                clear_terminal()
-                # Нужно закрыть список? ----
-                pass
+        con.output_ten_contacts()
     elif command == 2:  # Добавить контакт
         clear_terminal()
         first_name = input("Имя: ")

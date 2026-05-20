@@ -73,21 +73,23 @@ def close_connection():
         return False
 
 
-# Выводит список 10 первых контактов
-def output_first_contacts():
+# Выводит список контактов
+def output_ten_contacts(offset):
     try:
-        # Вывести те строки, значения которых не равно NULL
         cur.execute("""
             SELECT last_name, first_name, phone
             FROM contacts
-            LIMIT 10
-        """)
+            ORDER BY id
+            LIMIT 10 OFFSET ?
+        """, (offset,))
 
         display_result = cur.fetchall()
-        # Нужно вывести красиво, не через массив
-        for i in display_result:
-            print(i)
-        return True, display_result  # Выводит массив для сравнения
+        if not display_result:
+            print("На этой странице нет данных!")
+        else:
+            for i in display_result:
+                print(i)
+            return True
 
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
@@ -108,12 +110,6 @@ def check_create_contact(check_list):
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")
         return False
-
-
-# Выводит следующие 10 контактов
-def output_next_contacts():
-    pass
-    # Нужна проверка на rowid, чтобы вывести именно следующие
 
 
 # Добавляет контакт с важной информацией
@@ -157,7 +153,7 @@ def change_of_contacts():
     pass
 
 
-# Удаление контакта с базы данных
+# Удаление контакта с базы данных ----
 def delete_contact(first_name, last_name, phone):
     try:
         # Удаление строки из таблицы
@@ -169,10 +165,7 @@ def delete_contact(first_name, last_name, phone):
         # Дальше пересоздаём таблицу для выравнивания rowid
 
         # Создаём копирующую таблицу
-        cur.execute("""
-            CREATE TABLE copy_contacts AS
-                    SELECT * FROM contacts
-        """)
+        cur.execute("CREATE TABLE copy_contacts AS SELECT * FROM contacts")
 
         # Очищаем исходную таблицу
         cur.execute("DELETE FROM contacts")
