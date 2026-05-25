@@ -78,8 +78,8 @@ def output_ten_contacts():
                 break
 
 
-# Нужно ещё сделать ввод доп.информации через проверку на созданность
-def output_additionally():
+# Нужно ещё сделать ввод доп.информации через проверку на созданность ----
+def check_created_contact():
     result_check = db.check_create_contact()
     if result_check:
         print("Такой контакт есть")

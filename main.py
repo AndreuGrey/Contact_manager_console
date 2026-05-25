@@ -15,6 +15,7 @@ def menu_admin():  # Выводит список доступных команд
         '5. Закрыть программу'
     ]
 
+    clear_terminal()
     print()
     for i in menu_admin:
         print(i)
@@ -61,7 +62,7 @@ def programm_operation():  # Основная логика программы!
         if result:
             while True:
                 command_delete = input("Удалить ещё контакт? (Да/Нет): ")
-                if command_delete == 'Да':
+                if command_delete.lower() == 'да':
                     clear_terminal()
                     print("Какой контакт удалить?")
                     first_name = input("Имя: ")
@@ -69,7 +70,7 @@ def programm_operation():  # Основная логика программы!
                     phone = input("Телефон: ")
                     con.delete_contact(first_name, last_name, phone)
                     return True
-                elif command_delete == 'Нет':
+                elif command_delete.lower() == 'нет':
                     clear_terminal()
                     return False
     elif command == 5:  # Закрыть программу

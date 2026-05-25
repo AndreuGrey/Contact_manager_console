@@ -97,7 +97,7 @@ def output_ten_contacts(offset):
 
 
 # Проверка на созданность
-def check_create_contact(check_list):
+def check_created_contact():
     try:
         # Нужно написать запрос сравнения ----
         cur.execute("""
@@ -156,35 +156,10 @@ def change_of_contacts():
 # Удаление контакта с базы данных ----
 def delete_contact(first_name, last_name, phone):
     try:
-        # Удаление строки из таблицы
         cur.execute("""
             DELETE FROM contacts
             WHERE first_name = ? AND last_name = ? AND phone = ?
         """, (first_name, last_name, phone))
-
-        # Дальше пересоздаём таблицу для выравнивания rowid
-
-        # Создаём копирующую таблицу
-        cur.execute("CREATE TABLE copy_contacts AS SELECT * FROM contacts")
-
-        # Очищаем исходную таблицу
-        cur.execute("DELETE FROM contacts")
-
-        # Сбрасываем автоинкремент
-        cur.execute("""
-            UPDATE sqlite_sequence 
-            SET seq = 0
-            WHERE name = contacts 
-        """)
-
-        # Вставляет данные обратно из copy_contacts
-        cur.execute("""
-            INSERT INTO contacts
-            SELECT * FROM copy_contacts
-        """)
-
-        # Удаляем copy_contacts
-        cur.execute("DROP TABLE IF EXISTS copy_contacts")
 
         con.commit()
         return True
