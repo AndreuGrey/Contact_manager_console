@@ -86,9 +86,10 @@ def output_ten_contacts(offset):
         display_result = cur.fetchall()
         if not display_result:
             print("На этой странице нет данных!")
+            return False
         else:
             for i in display_result:
-                print(i)
+                print(*i)
             return True
 
     except sql.Error as e:
@@ -96,16 +97,18 @@ def output_ten_contacts(offset):
         return False
 
 
-# Проверка на созданность
-def check_created_contact():
+# Проверка на созданность ----
+def check_created_contact(first_name, last_name, phone):
     try:
-        # Нужно написать запрос сравнения ----
         cur.execute("""
-            ...
-        """)
+            SELECT 1
+            FROM contacts
+            WHERE first_name = ? AND last_name = ? AND phone = ?
+        """, (first_name, last_name, phone))
 
-        check_result = cur.fetchall()
-        return check_result
+        result_check = cur.fetchone()
+        if result_check[0] == 1:
+            return True
 
     except sql.Error as e:
         print(f"Ошибка базы данных: {e}")

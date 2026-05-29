@@ -80,7 +80,10 @@ def output_ten_contacts():
 
 # Нужно ещё сделать ввод доп.информации через проверку на созданность ----
 def check_created_contact():
-    result_check = db.check_create_contact()
+    last_name = input("Фамилия: ")
+    first_name = input("Имя: ")
+    phone = input("Телефон: ")
+    result_check = db.check_created_contact(first_name, last_name, phone)
     if result_check:
         print("Такой контакт есть")
 
