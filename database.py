@@ -97,7 +97,7 @@ def output_ten_contacts(offset):
         return False
 
 
-# Проверка на созданность ----
+# Проверка на созданность
 def check_created_contact(first_name, last_name, phone):
     try:
         cur.execute("""
@@ -152,8 +152,55 @@ def add_contact_different(first_name, middle_name, last_name, email, birth_date)
 
 
 # Изменение контакта ----
-def change_of_contacts():
-    pass
+def change_of_contact(command_change, replacement_of_value, first_name, last_name):
+    try:
+        # Можно сделать список названия колонки и выборку, но пусть будет так
+        match command_change:
+            case 1:  # Фамилия
+                cur.execute("""
+                    UPDATE contacts
+                    SET last_name = ?
+                    WHERE first_name = ? AND last_name = ?
+                """, (replacement_of_value, first_name, last_name))
+            case 2:  # Имя
+                cur.execute("""
+                    UPDATE contacts
+                    SET first_name = ?
+                    WHERE first_name = ? AND last_name = ?
+                """, (replacement_of_value, first_name, last_name))
+            case 3:  # Отчество
+                cur.execute("""
+                    UPDATE contacts
+                    SET middle_name = ?
+                    WHERE first_name = ? AND last_name = ?
+                """, (replacement_of_value, first_name, last_name))
+            case 4:  # Номер телефона
+                cur.execute("""
+                    UPDATE contacts
+                    SET phone = ?
+                    WHERE first_name = ? AND last_name = ?
+                """, (replacement_of_value, first_name, last_name))
+            case 5:  # Электронная почта
+                cur.execute("""
+                    UPDATE contacts
+                    SET email = ?
+                    WHERE first_name = ? AND last_name = ?
+                """, (replacement_of_value, first_name, last_name))
+            case 6:  # Дата рождения
+                cur.execute("""
+                    UPDATE contacts
+                    SET birth_date = ?
+                    WHERE first_name = ? AND last_name = ?
+                """, (replacement_of_value, first_name, last_name))
+            case _:  # else
+                return False
+
+        con.commit()
+        return True
+
+    except sql.Error as e:
+        print(f"Ошибка базы данных: {e}")
+        return False
 
 
 # Удаление контакта с базы данных ----

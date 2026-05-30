@@ -15,6 +15,7 @@ def menu_admin():  # Выводит список доступных команд
         '5. Закрыть программу'
     ]
 
+    clear_terminal()
     print()
     for i in menu_admin:
         print(i)
@@ -31,6 +32,7 @@ def programm_operation():  # Основная логика программы!
         first_name = input("Имя: ")
         last_name = input("Фамилия: ")
         phone = input("Телефон: ")
+        # Нужно добавить проверка на созданность ----
         result = con.add_contact_important(first_name, last_name, phone)
         if result:
             # Ввод дополнительной информации после добавления
@@ -48,9 +50,7 @@ def programm_operation():  # Основная логика программы!
                 pass
     elif command == 3:  # Изменить контакт
         clear_terminal()
-        con.check_created_contact()  # Изменение существующего контакта
-        # Ввод дополнительной информации при существующем контакте
-        pass
+        con.change_of_contact()
     elif command == 4:  # Удалить контакт
         clear_terminal()
         print("Какой контакт удалить?")
