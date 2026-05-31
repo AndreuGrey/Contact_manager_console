@@ -115,7 +115,7 @@ def check_created_contact(first_name, last_name, phone):
         return False
 
 
-# Добавляет контакт с важной информацией
+# Добавляет контакт с важной информацией ---- # Нужно поправить id
 def add_contact_important(first_name, last_name, phone):
     try:
         cur.execute("""

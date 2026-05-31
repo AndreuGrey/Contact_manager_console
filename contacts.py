@@ -179,11 +179,28 @@ def change_of_contact():
 
 
 # Удаление контакта с базы данных
-def delete_contact(first_name, last_name, phone):
-    result = db.delete_contact(first_name, last_name, phone)
-    if result:
+def delete_contact():
+    clear_terminal()
+    print("Какой контакт удалить?")
+    last_name = input("Фамилия: ")
+    first_name = input("Имя: ")
+    phone = input("Телефон: ")
+    result_delete = db.delete_contact(first_name, last_name, phone)
+    if result_delete:
         print(f"Контакт {last_name} {first_name} удалён!")
-        return result
+        while True:
+            command_delete = input("Удалить ещё контакт? (Да/Нет): ")
+            if command_delete.lower() == 'да':
+                clear_terminal()
+                print("Какой контакт удалить?")
+                last_name = input("Фамилия: ")
+                first_name = input("Имя: ")
+                phone = input("Телефон: ")
+                db.delete_contact(first_name, last_name, phone)
+                return True
+            elif command_delete.lower() == 'нет':
+                clear_terminal()
+                return False
 
 
 # Закрывает соединение с базой данных
