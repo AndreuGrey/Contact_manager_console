@@ -119,8 +119,8 @@ def check_created_contact(first_name, last_name, phone):
 def add_contact_important(first_name, last_name, phone):
     try:
         cur.execute("""
-            INSERT INTO contacts (id, first_name, last_name, phone)
-            VALUES (MAX(id) + 1, ?, ?, ?)
+            INSERT INTO contacts (first_name, last_name, phone)
+            VALUES (?, ?, ?)
         """, (first_name, last_name, phone))
 
         con.commit()

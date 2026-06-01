@@ -35,6 +35,7 @@ def programm_operation():  # Основная логика программы!
         result = con.add_contact_important(first_name, last_name, phone)
         if result:
             # Ввод дополнительной информации после добавления
+            clear_terminal()  # Стоит убрать
             command_different = input(
                 f"\nВвести дополнительную информацию (Да/Нет): ")
             if command_different == 'Да':
@@ -50,6 +51,7 @@ def programm_operation():  # Основная логика программы!
         clear_terminal()
         con.change_of_contact()
     elif command == 4:  # Удалить контакт
+        clear_terminal()
         con.delete_contact()
     elif command == 5:  # Закрыть программу
         clear_terminal()

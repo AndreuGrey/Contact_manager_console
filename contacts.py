@@ -36,6 +36,18 @@ def menu_change():  # Список для изменения
         print(f"{i}")
 
 
+def menu_delete():  # Список для удаления
+    menu_delete = [
+        '1. Да',
+        '2. Нет'
+    ]
+
+    print()
+    print(f"Удалить ещё контакт: ")
+    for i in menu_delete:
+        print(f"{i}")
+
+
 # Удаление таблицы (Администрация)
 def drop_table_db():
     result = db.drop_table_db()
@@ -180,27 +192,24 @@ def change_of_contact():
 
 # Удаление контакта с базы данных
 def delete_contact():
-    clear_terminal()
-    print("Какой контакт удалить?")
-    last_name = input("Фамилия: ")
-    first_name = input("Имя: ")
-    phone = input("Телефон: ")
-    result_delete = db.delete_contact(first_name, last_name, phone)
-    if result_delete:
-        print(f"Контакт {last_name} {first_name} удалён!")
-        while True:
-            command_delete = input("Удалить ещё контакт? (Да/Нет): ")
-            if command_delete.lower() == 'да':
-                clear_terminal()
-                print("Какой контакт удалить?")
-                last_name = input("Фамилия: ")
-                first_name = input("Имя: ")
-                phone = input("Телефон: ")
-                db.delete_contact(first_name, last_name, phone)
-                return True
-            elif command_delete.lower() == 'нет':
-                clear_terminal()
-                return False
+    while True:
+        print("Какой контакт удалить?")
+        last_name = input("Фамилия: ")
+        first_name = input("Имя: ")
+        phone = input("Телефон: ")
+        result_delete = db.delete_contact(first_name, last_name, phone)
+        if result_delete:
+            clear_terminal()
+            print(f"Контакт {last_name} {first_name} удалён!")
+            menu_delete()
+            command_delete = int(input(f"\nВыберите команду: "))
+            match command_delete:
+                case 1:
+                    clear_terminal()
+                    continue
+                case 2:
+                    clear_terminal()
+                    break
 
 
 # Закрывает соединение с базой данных
