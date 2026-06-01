@@ -56,11 +56,31 @@ def drop_table_db():
 
 
 # Добавляет контакт с важной информацией
-def add_contact_important(first_name, last_name, phone):
-    result = db.add_contact_important(first_name, last_name, phone)
-    if result:
+def add_contact_important():
+    last_name = input("Фамилия: ")
+    first_name = input("Имя: ")
+    phone = input("Телефон: ")
+    # Нужно добавить проверка на созданность ----
+    result_add_important = db.add_contact_important(
+        first_name, last_name, phone)
+    if result_add_important:  # Что будет если нет результата? ----
         print(f"{last_name} {first_name} успешно добавлен в Контакты!")
-    return result
+        # Ввод дополнительной информации после добавления
+        command_add = input(
+            f"\nВвести дополнительную информацию (Да/Нет): ")
+        if command_add.lower() == 'да':
+            middle_name = input("Отчество: ")
+            email = input("Электронная почта: ")
+            birth_date = input("Дата рождения: ")
+            result_add_different = db.add_contact_different(
+                first_name, middle_name, last_name, email, birth_date)
+            match result_add_different:
+                case True:
+                    pass
+                case False:
+                    pass
+        elif command_add.lower() == 'нет':
+            pass
 
 
 # Добавляет дополнительную информацию к созданному контакту

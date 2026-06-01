@@ -28,25 +28,7 @@ def programm_operation():  # Основная логика программы!
         con.output_ten_contacts()
     elif command == 2:  # Добавить контакт
         clear_terminal()
-        first_name = input("Имя: ")
-        last_name = input("Фамилия: ")
-        phone = input("Телефон: ")
-        # Нужно добавить проверка на созданность ----
-        result = con.add_contact_important(first_name, last_name, phone)
-        if result:
-            # Ввод дополнительной информации после добавления
-            clear_terminal()  # Стоит убрать
-            command_different = input(
-                f"\nВвести дополнительную информацию (Да/Нет): ")
-            if command_different == 'Да':
-                middle_name = input("Отчество: ")
-                email = input("Электронная почта: ")
-                birth_date = input("Дата рождения: ")
-                con.add_contact_different(
-                    first_name, middle_name, last_name, email, birth_date)
-                clear_terminal()
-            elif command_different == 'Нет':
-                pass
+        con.add_contact_important()
     elif command == 3:  # Изменить контакт
         clear_terminal()
         con.change_of_contact()
